@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our 4 Years ❤️</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff758c 0%, #ffb199 50%, #ffd1dc 100%);
+      color: #4a1c2f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .container {
+      padding: clamp(18px, 4vw, 36px);
+      width: 100%;
+      max-width: 560px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(16px);
+      border-radius: 30px;
+      box-shadow: 0 25px 70px rgba(255, 80, 120, 0.4);
+      animation: fadeIn 2s ease;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+      color: #7a1e3a;
+    }
+    h2 {
+      font-weight: 500;
+      opacity: 0.9;
+      color: #7a1e3a;
+    }
+    .timer {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .timer.fade-out {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    .box {
+      background: linear-gradient(135deg, #ffb6c1, #ff6f91);
+      border-radius: 20px;
+      padding: 18px 22px;
+      min-width: 90px;
+      box-shadow: 0 10px 25px rgba(255, 80, 120, 0.4);
+    }
+    .box span {
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    #seconds { animation: pulse 1s infinite; }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+    .box small { opacity: 0.7; }
+    .letter {
+      display: none;
+      opacity: 0;
+      background: linear-gradient(135deg, #fff1eb, #ace0f9);
+      padding: 35px;
+      border-radius: 22px;
+      margin-top: 25px;
+      color: #4a1c2f;
+      box-shadow: 0 12px 40px rgba(255, 105, 135, 0.35);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      transform: translateY(20px);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 0; }
+  </style>
+</head>
+<body>
+  <canvas id="hearts"></canvas>
+  <canvas id="confetti"></canvas>
+
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <h1>4 Years of Us ❤️</h1>
+    <h2>Counting every second until our anniversary</h2>
+
+    <div id="lock" style="background: linear-gradient(135deg,#ffdde1,#ee9ca7); padding: 28px; border-radius: 22px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(255,105,135,.35)">
+      <h2>Enter the password 💖</h2>
+      <input type="password" id="passwordInput" placeholder="Secret word"
+        style="padding:12px 14px;border-radius:12px;border:none;width:75%;margin-top:12px;font-size:1rem" />
+      <p id="lockMsg" style="color:#b0003a;margin-top:12px;font-weight:500"></p>
+    </div>
+
+    <div class="timer" id="timer">
+      <div class="box"><span id="days">0</span><small>Days</small></div>
+      <div class="box"><span id="hours">0</span><small>Hours</small></div>
+      <div class="box"><span id="minutes">0</span><small>Minutes</small></div>
+      <div class="box"><span id="seconds">0</span><small>Seconds</small></div>
+    </div>
+
+    <div class="letter" id="letter">
+      <h1>My Love Jahanvi💌</h1>
+      <p>
+Four years with you, and I still can't believe how lucky I am.
+You know what's crazy? I still get anxious when we're apart and I haven't heard your voice. You'd think four years would make me chill about it, but nope you still have that effect on me.
+I love that you make me happy. Not just sometimes, but every day. Even when life gets tough, we've always had each other's backs. Through thick and thin, we're a team, and I wouldn't want to navigate this life with anyone else.
+These four years have been everything the laughter, the late-night talks, the way we support each other's dreams. You're my person, my true love, my home.
+Looking ahead, all I see is more of us. Forever sounds pretty perfect when it's with you.
+Here's to four years down and forever to go.
+All my love,</p>
+      <p><strong>Forever yours Deepak ❤️</strong></p>
+    </div>
+  </div>
+
+  <script>
+    const targetDate = new Date('2025-12-25T01:00:00+05:30').getTime();
+
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const timerBox = document.getElementById('timer');
+    const lockBox = document.getElementById('lock');
+    const passwordInput = document.getElementById('passwordInput');
+    const lockMsg = document.getElementById('lockMsg');
+    const letter = document.getElementById('letter');
+    const music = document.getElementById('bgMusic');
+
+    const PASSWORD = 'forever';
+    const PREVIEW_MODE = false;
+
+    passwordInput.addEventListener('keyup', () => {
+      const now = Date.now();
+      if (passwordInput.value === PASSWORD && (now >= targetDate || PREVIEW_MODE)) {
+        lockBox.style.opacity = '0';
+        timerBox.classList.add('fade-out');
+        setTimeout(() => {
+          lockBox.style.display = 'none';
+          timerBox.style.display = 'none';
+          letter.style.display = 'block';
+          requestAnimationFrame(() => {
+            letter.style.opacity = '1';
+            letter.style.transform = 'translateY(0)';
+          });
+        }, 900);
+        startConfetti();
+        music.play();
+      } else if (passwordInput.value === PASSWORD) {
+        lockMsg.textContent = 'Too early… patience ❤️';
+      } else {
+        lockMsg.textContent = '';
+      }
+    });
+
+    setInterval(() => {
+      const diff = targetDate - Date.now();
+      if (diff <= 0) return;
+      daysEl.textContent = Math.floor(diff / (1000*60*60*24));
+      hoursEl.textContent = Math.floor((diff / (1000*60*60)) % 24);
+      minutesEl.textContent = Math.floor((diff / (1000*60)) % 60);
+      secondsEl.textContent = Math.floor((diff / 1000) % 60);
+    }, 1000);
+
+    const heartsCanvas = document.getElementById('hearts');
+    const hctx = heartsCanvas.getContext('2d');
+    let hearts = [];
+
+    function resizeHearts() {
+      heartsCanvas.width = window.innerWidth;
+      heartsCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeHearts);
+    resizeHearts();
+
+    function drawHearts() {
+      hctx.clearRect(0,0,heartsCanvas.width,heartsCanvas.height);
+      if (hearts.length < 40) hearts.push({x:Math.random()*heartsCanvas.width,y:heartsCanvas.height+20,size:Math.random()*12+8,speed:Math.random()*0.6+0.4,alpha:Math.random()*0.4+0.3});
+      hearts.forEach((h,i)=>{hctx.globalAlpha=h.alpha;hctx.font=`${h.size}px serif`;hctx.fillStyle='#ff2d55';hctx.fillText('❤️',h.x,h.y);h.y-=h.speed;if(h.y<-20)hearts.splice(i,1);});
+      hctx.globalAlpha=1;
+      requestAnimationFrame(drawHearts);
+    }
+    drawHearts();
+
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    window.addEventListener('resize',resize);resize();
+    let confetti=[];
+    function startConfetti(){const e=['💖','💕','💗','✨','🌸','🎉'];confetti=[];for(let i=0;i<180;i++){confetti.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,d:Math.random()*4+2,emoji:e[Math.floor(Math.random()*e.length)],size:Math.random()*18+14});}requestAnimationFrame(draw);}    
+    function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);confetti.forEach(c=>{ctx.font=`${c.size}px serif`;ctx.fillText(c.emoji,c.x,c.y);c.y+=c.d;if(c.y>canvas.height)c.y=-20;});requestAnimationFrame(draw);}  
+  </script>
+</body>
+</html>
